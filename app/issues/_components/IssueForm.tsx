@@ -1,29 +1,25 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-import ErrorMessage from "@/app/components/ErrorMessage";
-import Spinner from "@/app/components/Spinner";
-import { createIssueSchema } from "@/app/validationSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Issue } from "@prisma/client";
-import { Button, Callout, TextField } from "@radix-ui/themes";
+import { Button, Callout, Text, TextField } from "@radix-ui/themes";
+import React, { useState } from "react";
+import SimpleMDE from "react-simplemde-editor";
+import "easymde/dist/easymde.min.css";
+import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createIssueSchema } from "@/app/validationSchema";
 import { z } from "zod";
-import dynamic from "next/dynamic";
-import "easymde/dist/easymde.min.css";
+import ErrorMessage from "@/app/components/ErrorMessage";
+import Spinner from "@/app/components/Spinner";
+import { Issue } from "@prisma/client";
 
 interface Props {
   issue?: Issue;
 }
 
 type IssueFormData = z.infer<typeof createIssueSchema>;
-const SimpleMde = dynamic(() => import("react-simplemde-editor"), {
-  ssr: false,
-});
-
-const IssueForm = ({ issue }: Props) => {
+const NewIssuePage = ({ issue }: Props) => {
   const router = useRouter();
   const {
     register,
@@ -64,7 +60,7 @@ const IssueForm = ({ issue }: Props) => {
           name="description"
           control={control}
           render={({ field: { onChange, value } }) => (
-            <SimpleMde
+            <SimpleMDE
               placeholder="Description"
               value={value}
               onChange={onChange}
@@ -72,11 +68,7 @@ const IssueForm = ({ issue }: Props) => {
           )}
         />
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
-        <Button
-          disabled={isSubmitting}
-          type="submit"
-          className="cursor-pointer"
-        >
+        <Button disabled={isSubmitting} type="submit">
           {issue ? "Update Issue" : "Submit New Issue"}
           {isSubmitting && <Spinner />}
         </Button>
@@ -85,4 +77,4 @@ const IssueForm = ({ issue }: Props) => {
   );
 };
 
-export default IssueForm;
+export default NewIssuePage;

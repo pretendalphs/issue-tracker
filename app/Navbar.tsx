@@ -3,15 +3,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AiFillBug } from "react-icons/ai";
 import classnames from "classnames";
-import { useSession } from "next-auth/react";
 import {
-  Avatar,
-  Box,
   Container,
-  DropdownMenu,
   Flex,
+  Box,
+  DropdownMenu,
+  Avatar,
   Text,
 } from "@radix-ui/themes";
+import { useSession } from "next-auth/react";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 const Navbar = () => {
   const currentPath = usePathname();
   console.log(currentPath);
@@ -54,22 +56,24 @@ const Navbar = () => {
                     fallback="?"
                     size={"3"}
                     radius="full"
+                    className="cursor-pointer"
+                    referrerPolicy="no-referrer"
                   />
                 </DropdownMenu.Trigger>
                 <DropdownMenu.Content>
                   <DropdownMenu.Label>
-                    <Text>{session.user!.email}</Text>
+                    <Text size="2">{session.user!.email}</Text>
                   </DropdownMenu.Label>
                   <DropdownMenu.Item>
-                    <Link href="/api/auth/signout">Sign out</Link>
+                    <Link href="/api/auth/signout">Log Out</Link>
                   </DropdownMenu.Item>
                 </DropdownMenu.Content>
               </DropdownMenu.Root>
             )}
-
             {status === "unauthenticated" && (
-              <Link href="/api/auth/signin">Sign in</Link>
+              <Link href="/api/auth/signin">Log In</Link>
             )}
+            {status === "loading" && <Skeleton width={30} height={30} />}
           </Box>
         </Flex>
       </Container>
