@@ -1,18 +1,16 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import Navbar from "./Navbar";
 import "@radix-ui/themes/styles.css";
+import "./theme-config.css";
+import "./globals.css";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import { Container, Theme } from "@radix-ui/themes";
+import Navbar from "./Navbar";
 import AuthProvider from "./auth/Provider";
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+import QueryClientProvider from "./QueryClientProvider";
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
   subsets: ["latin"],
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
@@ -22,22 +20,22 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <AuthProvider>
-          <Theme>
-            <Navbar />
-            <main className="p-5">
-              <Container size="2">{children}</Container>
-            </main>
-          </Theme>
-        </AuthProvider>
+      <body className={inter.variable}>
+        <QueryClientProvider>
+          <AuthProvider>
+            <Theme accentColor="violet">
+              <Navbar />
+              <main className="p-5">
+                <Container>{children}</Container>
+              </main>
+            </Theme>
+          </AuthProvider>
+        </QueryClientProvider>
       </body>
     </html>
   );
