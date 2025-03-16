@@ -9,7 +9,7 @@ const LatestIssues = async () => {
     orderBy: {
       createdAt: "desc",
     },
-    take: 4,
+    take: 5,
     include: {
       assignedToUser: true,
     },
