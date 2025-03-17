@@ -5,10 +5,11 @@ import delay from "delay";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function PATCH(
-  request: NextRequest,
-  { params: { id } }: { params: { id: string } }
-) {
+interface ParamsProps {
+  params: Promise<{ id: string }>;
+}
+export async function PATCH(request: NextRequest, { params }: ParamsProps) {
+  const { id } = await params;
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -47,10 +48,8 @@ export async function PATCH(
   return NextResponse.json(updatedIssue);
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params: { id } }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest, { params }: ParamsProps) {
+  const { id } = await params;
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
