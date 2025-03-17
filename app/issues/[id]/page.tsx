@@ -11,9 +11,9 @@ import AssigneeSelect from "./AssigneeSelect";
 import { cache } from "react";
 
 interface IssueDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 const fetchUser = cache((issueId: number) => {
@@ -23,8 +23,9 @@ const fetchUser = cache((issueId: number) => {
 });
 
 const IssueDetailPage = async ({ params }: IssueDetailPageProps) => {
+  const { id } = await params;
   const session = await getServerSession(authOptions);
-  const issue = await fetchUser(parseInt(params.id));
+  const issue = await fetchUser(parseInt(id));
   if (!issue) {
     notFound();
   }
@@ -48,7 +49,8 @@ const IssueDetailPage = async ({ params }: IssueDetailPageProps) => {
 };
 
 export async function generateMetadata({ params }: IssueDetailPageProps) {
-  const issue = await fetchUser(parseInt(params.id));
+  const { id } = await params;
+  const issue = await fetchUser(parseInt(id));
   if (!issue) {
     notFound();
   }
